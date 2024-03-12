@@ -8,6 +8,8 @@ import { ElementsService } from './elements.service';
 import { CreateElementDto } from './dto/create-element.dto';
 import { UpdateElementDto } from './dto/update-element.dto';
 import { Server, Socket } from 'socket.io';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -19,19 +21,19 @@ export class ElementsGateway {
   server: Server;
 
   constructor(private readonly elementsService: ElementsService) {}
-
+  @UseGuards(AuthGuard)
   @SubscribeMessage('createElement')
   async create(@MessageBody() createElementDto: CreateElementDto) {
     const el = await this.elementsService.create(createElementDto);
     this.server.emit('newElement', el);
     return el;
   }
-
+  @UseGuards(AuthGuard)
   @SubscribeMessage('findAllElements')
   findAll() {
     return this.elementsService.findAll();
   }
-
+  @UseGuards(AuthGuard)
   @SubscribeMessage('updateElement')
   async update(@MessageBody() updateElementDto: UpdateElementDto) {
     const el = await this.elementsService.update(
@@ -41,7 +43,7 @@ export class ElementsGateway {
     this.server.emit('updatedElement', el);
     return el;
   }
-
+  @UseGuards(AuthGuard)
   @SubscribeMessage('removeElement')
   async remove(@MessageBody() id: number) {
     const el = await this.elementsService.remove(id);

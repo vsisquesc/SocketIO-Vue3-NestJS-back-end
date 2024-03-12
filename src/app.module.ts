@@ -6,6 +6,8 @@ import { ElementsModule } from './elements/elements.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Element } from './elements/entities/element.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { Element } from './elements/entities/element.entity';
       entities: [Element],
     }),
     ElementsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
