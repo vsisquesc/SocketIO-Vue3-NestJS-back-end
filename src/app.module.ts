@@ -8,6 +8,7 @@ import { DataSource } from 'typeorm';
 import { Element } from './elements/entities/element.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     ElementsModule,
     AuthModule,
     UsersModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
