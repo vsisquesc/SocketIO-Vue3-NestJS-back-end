@@ -4,11 +4,16 @@ import { UsersModule } from '../users/users.module';
 import { EmailModule } from '../email/email.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
-import { jwtConstants } from './constants';
+import { QUEUE_NAME, jwtConstants } from './constants';
 import { UsersGateway } from 'src/users/users.gateway';
+import { BullModule } from '@nestjs/bullmq';
+import { AuthQueueProcessor } from './auth-queue.processor';
 
 @Module({
   imports: [
+    BullModule.registerQueue({
+      name: QUEUE_NAME,
+    }),
     EmailModule,
     UsersModule,
     JwtModule.register({
@@ -17,7 +22,7 @@ import { UsersGateway } from 'src/users/users.gateway';
       signOptions: { expiresIn: '3600s' },
     }),
   ],
-  providers: [AuthService, UsersGateway],
+  providers: [AuthService, UsersGateway, AuthQueueProcessor],
   controllers: [AuthController],
   exports: [AuthService],
 })

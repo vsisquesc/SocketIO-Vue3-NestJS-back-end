@@ -26,9 +26,6 @@ async function authorize(config, callback) {
 @Injectable()
 export class EmailService {
   async send(newUser: string, sendTo: string[]): Promise<boolean> {
-    if (sendTo.length == 0) {
-      return false;
-    }
     const config = {
       service: 'gmail',
       auth: {
@@ -40,14 +37,14 @@ export class EmailService {
       },
     };
 
-    authorize(config, (transporter) => {
+    await authorize(config, (transporter) => {
       const mail = {
         from: process.env.MAIL_USER,
         to: sendTo,
         subject: 'New User',
         text: `This is the new user: ${newUser}`,
       };
-      transporter.sendMail(mail, (error) => {
+      return transporter.sendMail(mail, (error) => {
         if (error) {
           console.error('Error while sending Email', error);
         } else {
