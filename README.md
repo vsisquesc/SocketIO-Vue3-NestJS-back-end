@@ -17,11 +17,16 @@ Se han definido 4 módulos de NestJS, `auth`, `elements`, `email` y `users` .
 - `users`: Este módulo se utiliza para monitorizar que usuarios están conectados actualmente, hace uso de los sockets para emitir cuando un usuario se conecta o se desconecta en tiempo real. Los usuarios también se van almacenando y eliminando de la BBDD local conforme se van conectando y desconectando del sistema.
 
 ## Ejecución
+### Pre-requisitos
 
-PreRequisitos:
-Docker instalado
+Es necesario tener docker instalado, ya que se lanza un container que ejecuta Redis.
 
-### 1º Instalar dependencias
+### 1º Variables de entorno
+
+Se debe definir el fichero .env con los credenciales pertinentes, se adjunta en el correo.
+
+
+### 2º Instalar dependencias
 
 Se debe ejecutar el siguiente comando para instalar las dependencias de nodeJS
 
@@ -37,9 +42,6 @@ docker compose up
 
 Para configurar y lanzar el container en el que correrá redis (puerto 6379)
 
-### 2º Variables de entorno
-
-Se debe definir el fichero .env con los credenciales pertinentes, se adjunta en el correo.
 
 ### 3º Ejecutar el servidor
 
