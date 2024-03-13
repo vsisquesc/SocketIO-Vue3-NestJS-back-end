@@ -16,10 +16,9 @@ export class AuthService {
   ) {}
   async signIn(email: string): Promise<any> {
     const users = (await this.usersService.findAll()).map((el) => el.email);
-    const res = await this.usersService.login(email);
-    if (!res) {
-      throw new UnauthorizedException('Already loggedIn');
-    }
+    await this.usersService.login({
+      email: email,
+    });
 
     if (users.length > 0) {
       await this.taskQueue.add(TASK_NAME, {

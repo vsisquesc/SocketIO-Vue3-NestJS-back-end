@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { EmailModule } from './email/email.module';
 import { BullModule } from '@nestjs/bullmq';
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { BullModule } from '@nestjs/bullmq';
       type: 'sqlite',
       database: 'db/sql.sqlite',
       synchronize: true,
-      entities: [Element],
+      entities: [Element, User],
     }),
     ElementsModule,
     AuthModule,

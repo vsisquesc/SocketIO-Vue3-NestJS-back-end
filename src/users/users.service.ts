@@ -1,36 +1,44 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-
-type User = {
-  email: string;
-};
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-element.dto';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   async findAll(): Promise<User[]> {
-    return this.users;
+    return await this.userRepository.find();
   }
 
-  async login(email: string): Promise<boolean> {
-    const idx = this.users.map((e) => e.email).indexOf(email);
-    if (idx == -1) {
-      const u: User = {
-        email: email,
-      };
-      this.users.push(u);
-
-      return true;
+  async login(createUserDto: CreateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (user != undefined) {
+      throw new UnauthorizedException(
+        `Existing user with email: ${createUserDto.email}`,
+      );
     }
-    return false;
+
+    const u = this.userRepository.create(createUserDto);
+    return await this.userRepository.save(u);
   }
 
-  async logout(email: string): Promise<boolean> {
-    const idx = this.users.map((e) => e.email).indexOf(email);
-    if (idx >= 0) {
-      this.users.splice(idx, 1);
-      return true;
+  async logout(email: string) {
+    const status = await this.userRepository.delete(email);
+    if (status.affected === 0) {
+      throw new NotFoundException(`User with Email ${email} not found`);
     }
-    return false;
+    return { message: 'User successfully deleted' };
   }
 }
