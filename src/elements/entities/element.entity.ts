@@ -6,6 +6,4 @@ export class Element {
   id: number;
   @Column({ name: 'content', nullable: false })
   content: string;
-  @Column({ name: 'sender', nullable: false })
-  sender: string;
 }

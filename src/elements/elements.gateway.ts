@@ -23,9 +23,7 @@ export class ElementsGateway {
   constructor(private readonly elementsService: ElementsService) {}
   @UseGuards(AuthGuard)
   @SubscribeMessage('createElement')
-  async create(@MessageBody() createElementDto: CreateElementDto, @Req() req) {
-    const user = req.user.sub;
-    createElementDto.sender = user;
+  async create(@MessageBody() createElementDto: CreateElementDto) {
     const el = await this.elementsService.create(createElementDto);
     this.server.emit('newElement', el);
     return el;
