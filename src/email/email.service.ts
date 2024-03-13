@@ -12,9 +12,6 @@ async function authorize(config, callback) {
   );
   oauth2Client.setCredentials({
     refresh_token: config.auth.refreshToken,
-    // tls: {
-    //     rejectUnauthorized: false
-    // }
   });
   oauth2Client.getAccessToken((err, token) => {
     if (err) return console.log(err);
