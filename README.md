@@ -4,6 +4,8 @@
 
 Explicar características e implementación (JWT, sockets, mysqlite, oauth2, y bullmq)
 
+Se usa el contenido del JWT para asignar unusuario cuando se crea un elemento y para el logout (saber quien logear pafuera)
+
 ## Ejecución
 
 PreRequisitos:

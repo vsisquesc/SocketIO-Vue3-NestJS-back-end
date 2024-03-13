@@ -19,7 +19,7 @@ import { AuthQueueProcessor } from './auth-queue.processor';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '3600s' },
+      // signOptions: { expiresIn: '3600s' },
     }),
   ],
   providers: [AuthService, UsersGateway, AuthQueueProcessor],

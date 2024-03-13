@@ -7,7 +7,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { Req, UseGuards } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -19,14 +19,15 @@ export class UsersGateway {
   server: Server;
 
   constructor(private readonly usersService: UsersService) {}
-  @UseGuards(AuthGuard)
+
   @SubscribeMessage('CurrentUsers')
   findAll() {
     return this.usersService.findAll();
   }
   @UseGuards(AuthGuard)
   @SubscribeMessage('userLogout')
-  async remove(@MessageBody() email: string) {
+  async remove(@Req() req) {
+    const email = req.user.sub;
     return this.usersService.logout(email).then((res) => {
       if (res) {
         this.server.emit('userDisconected', email);

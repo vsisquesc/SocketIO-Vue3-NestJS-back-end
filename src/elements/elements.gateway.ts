@@ -9,7 +9,7 @@ import { CreateElementDto } from './dto/create-element.dto';
 import { UpdateElementDto } from './dto/update-element.dto';
 import { Server, Socket } from 'socket.io';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { Req, UseGuards } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
@@ -23,12 +23,13 @@ export class ElementsGateway {
   constructor(private readonly elementsService: ElementsService) {}
   @UseGuards(AuthGuard)
   @SubscribeMessage('createElement')
-  async create(@MessageBody() createElementDto: CreateElementDto) {
+  async create(@MessageBody() createElementDto: CreateElementDto, @Req() req) {
+    const user = req.user.sub;
+    createElementDto.sender = user;
     const el = await this.elementsService.create(createElementDto);
     this.server.emit('newElement', el);
     return el;
   }
-  @UseGuards(AuthGuard)
   @SubscribeMessage('findAllElements')
   findAll() {
     return this.elementsService.findAll();
